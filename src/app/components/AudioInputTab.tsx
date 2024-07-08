@@ -3,14 +3,15 @@
 import { Flex, Card, CardBody, FormLabel, Stack, FormControl, Input, Button, Divider, CardFooter, Image, Text, useToken } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { handleAudioChange1, handleAudioChange2 } from '../audio-comm/logic';
+import { parse } from 'path';
 
 const AudioInputTab: React.FC = () => {
-  const [image1, setImage1] = useState<File | null>(null);
+  const [audio1, setAudio1] = useState<File | null>(null);
   const [text1, setText1] = useState('');
   const [result1, setResult1] = useState<any>(null);
   const [url1, setUrl1] = useState<string>();
 
-  const [image2, setImage2] = useState<File | null>(null);
+  const [audio2, setAudio2] = useState<File | null>(null);
   const [text2, setText2] = useState<any>(null);
   const [result2, setResult2] = useState<any>(null);
   const [url2, setUrl2] = useState<string>();
@@ -32,36 +33,34 @@ const AudioInputTab: React.FC = () => {
       case "text1":
         setText1(e.target.value);
         break;
-      case "image1":
-        setImage1(e.target.files[0]);
+      case "audio1":
+        setAudio1(e.target.files[0]);
         break;
-      case "image2":
-        setImage2(e.target.files[0]);
+      case "audio2":
+        setAudio2(e.target.files[0]);
         break;
 
     }
   };
 
   const handleAudioClick1 = () => {
-    handleAudioChange1(text1, image1).then((x) => {
-      console.log(x)
+    handleAudioChange1(text1, audio1).then((x) => {
       setResult1(x);
     });
   };
 
   const handleAudioClick2 = () => {
-    handleAudioChange2(image2).then((x) => {
-      console.log(x)
-      setResult2(x);
-      setText2(x);
+    handleAudioChange2(audio2).then((x) => {
+      setResult2(x.text);
+      setText2(x.text);
     });
   };
 
-  const downloadImage = () => {
+  const downloadAudio = () => {
     if (result1) {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(result1);
-      link.download = 'encoded.png'; // Specify the filename
+      link.download = 'encoded.wav'; // Specify the filename
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -91,30 +90,27 @@ const AudioInputTab: React.FC = () => {
           boxShadow={`0px 0px 30px ${red100}`}
           >
             <CardBody>
-              {image1 != null ? (
+              {audio1 != null ? (
                 <Flex justify="center">
-                  <Image
-                  width={240}
-                  height={240}
-                  src={URL.createObjectURL(image1)}
-                  alt='Green double couch with wooden legs'
-                  borderRadius='lg'
-                  />
+                  <Card w="10vw" h="6vh" backgroundColor="red.400" border="1px solid black" justify="center">
+                    <Text color="white" align="center">{audio1.name}</Text>
+                    <Text color="white" align="center">{}</Text>
+                  </Card>
                 </Flex>
               ) : (
                 <Flex justify="center" m={4}>
                   <Card w="8vw" h="6vh" backgroundColor="red.400" border="1px solid black" justify="center">
-                    <Text color="white" align="center">No image inserted</Text>
+                    <Text color="white" align="center">No audio inserted</Text>
                   </Card>
                 </Flex>
               )}
-              <FormLabel mt={10} color="white">Upload image</FormLabel>
+              <FormLabel mt={10} color="white">Upload audio</FormLabel>
               <input
                 style={{color:"white"}}
                 type="file"
-                name='image1'
+                name='audio1'
                 onChange={handleChange}
-                accept="image/*" 
+                accept="file/.wav" 
               />     
               <Stack mt='6' spacing='3'>
                 <FormControl>
@@ -135,7 +131,7 @@ const AudioInputTab: React.FC = () => {
                   alt='Green double couch with wooden legs'
                   borderRadius='lg'
                   />
-                  <Button mt='2' color={`${red100}`} alignSelf="center" onClick={downloadImage}>
+                  <Button mt='2' color={`${red100}`} alignSelf="center" onClick={downloadAudio}>
                     Download
                   </Button>
                 </Flex>
@@ -163,12 +159,12 @@ const AudioInputTab: React.FC = () => {
           boxShadow={`0px -0px 30px ${red100}`}
           >
             <CardBody>
-              {image2 != null ? (
+              {audio2 != null ? (
                 <Flex justify="center">
                   <Image
                   width={240}
                   height={240}
-                  src={URL.createObjectURL(image2)}
+                  src={URL.createObjectURL(audio2)}
                   alt='Green double couch with wooden legs'
                   borderRadius='lg'
                   />
@@ -176,17 +172,17 @@ const AudioInputTab: React.FC = () => {
               ) : (
                 <Flex justify="center" m={4}>
                   <Card w="8vw" h="6vh" backgroundColor="red.400" border="1px solid black" justify="center">
-                    <Text color="white" align="center">No image inserted</Text>
+                    <Text color="white" align="center">No audio inserted</Text>
                   </Card>
                 </Flex>
               )}
-              <FormLabel mt={10} color="white">Insert the embedded image</FormLabel>
+              <FormLabel mt={10} color="white">Insert the embedded audio</FormLabel>
               <input
                 style={{color:"white"}}
                 type="file"
-                name='image2'
+                name='audio2'
                 onChange={handleChange}
-                accept="image/*" 
+                accept="file/.wav" 
               />     
               <Stack mt='6' spacing='3'>
                 <FormControl>

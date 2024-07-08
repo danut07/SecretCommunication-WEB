@@ -8,8 +8,8 @@ import axios from "axios";
   try {
     let formData = new FormData();
     formData.append("audioFile", audio1)
-    formData.append("textMessage", text1)
-    const response = await fetch("https://localhost:44366/api/Image/encode", {
+    formData.append("textToEmbed", text1)
+    const response = await fetch("https://localhost:44366/api/Audio/encode", {
       method: "POST",
       body: formData
     });
@@ -31,8 +31,8 @@ export const handleAudioChange2 = async (audio2:any) => {
       body: formData
     });
     if (response.status == 200) {
-      var result = await response.blob();
-      return result.text();
+      var result = await response.json();
+      return result;
     } else throw response;
   } catch (error) {
     console.log(error);
