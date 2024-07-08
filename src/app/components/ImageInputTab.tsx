@@ -68,7 +68,8 @@ const ImageInputTab: React.FC = () => {
     if (result1) {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(result1);
-      link.download = 'encoded.png'; // Specify the filename
+      var name = image1?.name.split('.');
+      link.download = `${name?.at(0)}_encoded.png`; // Specify the filename
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

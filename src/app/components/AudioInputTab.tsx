@@ -1,9 +1,8 @@
 "use client"; // This is a client component 👈🏽
 
-import { Flex, Card, CardBody, FormLabel, Stack, FormControl, Input, Button, Divider, CardFooter, Image, Text, useToken } from '@chakra-ui/react';
+import { Flex, Card, CardBody, FormLabel, Stack, FormControl, Input, Button, Divider, CardFooter, Image, Text, useToken, Icon } from '@chakra-ui/react';
 import React, { useState } from 'react';
 import { handleAudioChange1, handleAudioChange2 } from '../audio-comm/logic';
-import { parse } from 'path';
 
 const AudioInputTab: React.FC = () => {
   const [audio1, setAudio1] = useState<File | null>(null);
@@ -45,6 +44,7 @@ const AudioInputTab: React.FC = () => {
 
   const handleAudioClick1 = () => {
     handleAudioChange1(text1, audio1).then((x) => {
+      console.log(x);
       setResult1(x);
     });
   };
@@ -60,7 +60,8 @@ const AudioInputTab: React.FC = () => {
     if (result1) {
       const link = document.createElement('a');
       link.href = URL.createObjectURL(result1);
-      link.download = 'encoded.wav'; // Specify the filename
+      var name = audio1?.name.split('.');
+      link.download = `${name?.at(0)}_encoded.wav`;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -94,7 +95,6 @@ const AudioInputTab: React.FC = () => {
                 <Flex justify="center">
                   <Card w="10vw" h="6vh" backgroundColor="red.400" border="1px solid black" justify="center">
                     <Text color="white" align="center">{audio1.name}</Text>
-                    <Text color="white" align="center">{}</Text>
                   </Card>
                 </Flex>
               ) : (
@@ -110,7 +110,7 @@ const AudioInputTab: React.FC = () => {
                 type="file"
                 name='audio1'
                 onChange={handleChange}
-                accept="file/.wav" 
+                accept="audio/*" 
               />     
               <Stack mt='6' spacing='3'>
                 <FormControl>
@@ -124,13 +124,9 @@ const AudioInputTab: React.FC = () => {
                   <FormLabel color="white">
                   Result
                   </FormLabel>  
-                  <Image
-                  width={240}
-                  height={240}
-                  src={URL.createObjectURL(result1)}
-                  alt='Green double couch with wooden legs'
-                  borderRadius='lg'
-                  />
+                  <Card w="fit-content" h="6vh" backgroundColor="red.400" border="1px solid black" justify="center">
+                    <Text color="white" align="center">{audio1?.name.split('.').at(0)}_encoded.wav</Text>
+                  </Card>
                   <Button mt='2' color={`${red100}`} alignSelf="center" onClick={downloadAudio}>
                     Download
                   </Button>
@@ -161,13 +157,9 @@ const AudioInputTab: React.FC = () => {
             <CardBody>
               {audio2 != null ? (
                 <Flex justify="center">
-                  <Image
-                  width={240}
-                  height={240}
-                  src={URL.createObjectURL(audio2)}
-                  alt='Green double couch with wooden legs'
-                  borderRadius='lg'
-                  />
+                  <Card w="fit-content" h="6vh" backgroundColor="red.400" border="1px solid black" justify="center" direction="row">
+                    <Text color="white" align="center">{audio2.name}</Text>
+                  </Card>
                 </Flex>
               ) : (
                 <Flex justify="center" m={4}>
@@ -182,7 +174,7 @@ const AudioInputTab: React.FC = () => {
                 type="file"
                 name='audio2'
                 onChange={handleChange}
-                accept="file/.wav" 
+                accept="audio/*"
               />     
               <Stack mt='6' spacing='3'>
                 <FormControl>
